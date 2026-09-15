@@ -81,11 +81,11 @@ with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
 if new_game:
-    # FIXME: Never resets status, score, or history, so a finished game stays finished
-    # and the previous score carries into the new one
+    st.session_state.secret = random.randint(low, high)
     st.session_state.attempts = 0
-    # FIXME: Hardcoded 1-100 ignores the difficulty range, so Easy can draw an unreachable secret
-    st.session_state.secret = random.randint(1, 100)
+    st.session_state.score = 0
+    st.session_state.status = "playing"
+    st.session_state.history = []
     st.success("New game started.")
     st.rerun()
 
