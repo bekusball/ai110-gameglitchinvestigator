@@ -36,25 +36,21 @@ def check_guess(guess, secret):
     """
     Compare guess to secret and return (outcome, message).
 
+    Both values are compared numerically, so a secret that arrives as a string
+    still produces the correct hint.
+
     outcome examples: "Win", "Too High", "Too Low"
     """
+    guess = int(guess)
+    secret = int(secret)
+
     if guess == secret:
         return "Win", "🎉 Correct!"
 
-    # FIXME: Hint polarity swapped here
-    try:
-        if guess > secret:
-            return "Too High", "📈 Go HIGHER!"
-        else:
-            return "Too Low", "📉 Go LOWER!"
-    except TypeError:
-        # FIXME: Same swapped polarity duplicated in this string-compare fallback
-        g = str(guess)
-        if g == secret:
-            return "Win", "🎉 Correct!"
-        if g > secret:
-            return "Too High", "📈 Go HIGHER!"
-        return "Too Low", "📉 Go LOWER!"
+    if guess > secret:
+        return "Too High", "📉 Go LOWER!"
+
+    return "Too Low", "📈 Go HIGHER!"
 
 
 def update_score(current_score: int, outcome: str, attempt_number: int):

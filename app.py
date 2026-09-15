@@ -108,14 +108,7 @@ if submit:
     else:
         st.session_state.history.append(guess_int)
 
-        # FIXME: Casting the secret to str on even attempts forces check_guess into its
-        # lexicographic fallback, which misclassifies guesses and feeds bad outcomes to scoring
-        if st.session_state.attempts % 2 == 0:
-            secret = str(st.session_state.secret)
-        else:
-            secret = st.session_state.secret
-
-        outcome, message = check_guess(guess_int, secret)
+        outcome, message = check_guess(guess_int, st.session_state.secret)
 
         # FIXME: show_hint is only read inside this submit block, so toggling it off and
         # back on never brings the hint back until the next submission
