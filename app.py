@@ -37,6 +37,8 @@ if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
 
 if "attempts" not in st.session_state:
+    # FIX: start the attempt counter at 0 to match the New Game reset
+    # Reported from playtesting, fixed with Claude, covered by tests/test_app_flow.py
     st.session_state.attempts = 0
 
 if "score" not in st.session_state:
@@ -58,6 +60,9 @@ st.info(
     f"Attempts left: {attempt_limit - st.session_state.attempts}"
 )
 
+# FIXME: Same render-order problem as the banner above: this expander draws
+# before the submit handler updates attempts, score, and history, so every value
+# here is one guess stale
 with st.expander("Developer Debug Info"):
     st.write("Secret:", st.session_state.secret)
     st.write("Attempts:", st.session_state.attempts)
@@ -79,6 +84,8 @@ with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
 if new_game:
+    # FIX: reset the whole game and draw the secret from the difficulty range
+    # Reported from playtesting, fixed with Claude, covered by tests/test_app_flow.py
     st.session_state.secret = random.randint(low, high)
     st.session_state.attempts = 0
     st.session_state.score = 0
@@ -101,9 +108,13 @@ if submit:
         st.session_state.history.append(raw_guess)
         st.error(err)
     else:
+        # FIX: count an attempt only after the guess parses
+        # Found with Claude while tracing the counter, covered by tests/test_app_flow.py
         st.session_state.attempts += 1
         st.session_state.history.append(guess_int)
 
+        # FIX: pass the secret unchanged so guesses always compare numerically
+        # Found with Claude while tracing the swapped hints, covered by tests/test_game_logic.py
         outcome, message = check_guess(guess_int, st.session_state.secret)
 
         # FIXME: show_hint is only read inside this submit block, so toggling it off and

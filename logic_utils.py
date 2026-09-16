@@ -41,6 +41,8 @@ def check_guess(guess, secret):
 
     outcome examples: "Win", "Too High", "Too Low"
     """
+    # FIX: correct the swapped hint polarity and compare guesses numerically
+    # Reported from playtesting, fixed with Claude, covered by tests/test_game_logic.py
     guess = int(guess)
     secret = int(secret)
 
