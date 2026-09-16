@@ -77,3 +77,45 @@ def test_new_game_secret_respects_the_difficulty_range():
         assert 1 <= at.session_state["secret"] <= 20, (
             f"Easy range is 1-20 but New Game drew {at.session_state['secret']}"
         )
+
+
+def test_a_fresh_game_has_used_no_attempts():
+    at = start_app()
+    assert at.session_state["attempts"] == 0
+
+
+def test_a_fresh_normal_game_offers_all_eight_attempts():
+    at = start_app()
+    assert "Attempts left: 8" in at.info[0].value
+
+
+def test_an_empty_guess_does_not_cost_an_attempt():
+    at = start_app()
+    at = guess(at, "")
+    assert at.session_state["attempts"] == 0
+
+
+def test_an_unparseable_guess_does_not_cost_an_attempt():
+    at = start_app()
+    at = guess(at, "abc")
+    assert at.session_state["attempts"] == 0
+    assert at.error[0].value == "That is not a number."
+
+
+def test_a_valid_guess_costs_exactly_one_attempt():
+    at = start_app(secret=50)
+    at = guess(at, 10)
+    assert at.session_state["attempts"] == 1
+
+
+def test_normal_difficulty_allows_eight_real_guesses():
+    at = start_app(secret=50)
+
+    for n, wrong in enumerate([10, 11, 12, 13, 14, 15, 16], start=1):
+        at = guess(at, wrong)
+        assert at.session_state["status"] == "playing", (
+            f"game ended after only {n} guesses"
+        )
+
+    at = guess(at, 17)
+    assert at.session_state["status"] == "lost"
