@@ -31,23 +31,23 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📸 Demo Walkthrough
 
-Describe your fixed game in numbered steps so a reader can follow along without watching a video:
-
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+1. Run `python -m streamlit run app.py` and open the local URL shown in the terminal.
+2. Choose **Easy**, **Normal**, or **Hard** in the sidebar. The sidebar shows that difficulty's number range and attempt limit.
+3. Open **Developer Debug Info** to reveal the secret number for the demo.
+4. Enter a number and select **Submit Guess 🚀**. A valid guess is recorded and the game responds with **Go HIGHER!**, **Go LOWER!**, or a win message. Empty or non-numeric input shows an error without using an attempt.
+5. Enter the secret number to win and see the final score. Select **New Game 🔁** to reset the score, attempt count, history, and secret number for another round.
 
 **Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
 
 ## 🧪 Test Results
 
 ```
-# Paste your pytest output here, e.g.:
-# pytest tests/
-# ========================= X passed in 0.XXs =========================
+$ .venv/bin/python -m pytest tests/ -q
+...................                                                      [100%]
+19 passed in 10.83s
 ```
+
+The test suite checks guess outcomes and hints, numeric comparison with string secrets, input validation, attempt counting, and New Game reset behavior.
 
 ## 🚀 Stretch Features
 
